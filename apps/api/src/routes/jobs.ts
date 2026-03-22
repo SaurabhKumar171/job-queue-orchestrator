@@ -8,7 +8,7 @@ import {
 import { PRIORITIES } from "@repo/shared";
 import crypto from "crypto";
 
-const queueMap = {
+export const queueMap = {
   email: emailQueue,
   report: reportQueue,
   webhook: webhookQueue,

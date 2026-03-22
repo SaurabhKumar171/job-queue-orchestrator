@@ -1,4 +1,7 @@
 import { FastifyInstance } from "fastify";
+import { getAllDLQ, getDLQEntry, removeDLQEntry } from "../queues/dlq";
+import { enqueue } from "../queues/client";
+import { queueMap } from "./jobs";
 
 export async function dlqRoutes(app: FastifyInstance) {
   app.get("/dlq", async () => getAllDLQ());
