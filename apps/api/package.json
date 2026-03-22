@@ -1,0 +1,25 @@
+{
+  "name": "@repo/api",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "fastify": "^4.26.0",
+    "@fastify/cors": "^9.0.0",
+    "bullmq": "^5.1.0",
+    "ioredis": "^5.3.2",
+    "prom-client": "^15.1.0",
+    "pino": "^8.17.0",
+    "pino-pretty": "^10.3.0",
+    "pg": "^8.11.0",
+    "@repo/shared": "*"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0",
+    "@types/node": "^20.0.0",
+    "@types/pg": "^8.0.0",
+    "tsx": "^4.7.0"
+  }
+}
