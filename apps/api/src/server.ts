@@ -4,7 +4,8 @@ import "./queues/workers"; // starts all workers on boot
 import { emailQueue, enqueue } from "./queues/client";
 import { jobRoutes } from "./routes/jobs";
 import { register } from "./metrics";
-require("dotenv").config();
+import { config } from "./config";
+import { v4 as uuidv4 } from "uuid";
 
 const app = Fastify({ logger: true });
 
@@ -13,7 +14,7 @@ app.get("/health", async () => ({ ok: true }));
 app.get("/test-job", async () => {
   const job = await enqueue(
     emailQueue,
-    "test-email-002",
+    `job-${uuidv4()}`,
     { to: "hello@test.com", subject: "Test" },
     1,
   );
@@ -27,7 +28,7 @@ app.get("/metrics", async (req, reply) => {
 
 app.register(jobRoutes);
 
-app.listen({ port: process.env.PORT }, (err) => {
+app.listen({ port: config.port }, (err) => {
   if (err) {
     (app.log as any).error(err);
     process.exit(1);

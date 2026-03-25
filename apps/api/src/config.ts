@@ -1,4 +1,8 @@
-function require(name: string): string {
+import * as dotenv from "dotenv";
+
+dotenv.config();
+
+function requireVariable(name: string): string {
   const val = process.env[name];
   if (!val) throw new Error(`Missing required env var: ${name}`);
   return val;
@@ -10,9 +14,9 @@ export const config = {
     port: parseInt(process.env.REDIS_PORT || "6379"),
   },
   db: {
-    url: require("DATABASE_URL"),
+    url: requireVariable("DATABASE_URL"),
   },
-  port: parseInt(process.env.PORT || "3000"),
+  port: parseInt(process.env.PORT || "8000"),
   logLevel: process.env.LOG_LEVEL || "info",
   isDev: process.env.NODE_ENV !== "production",
 };
