@@ -6,6 +6,8 @@ import { jobRoutes } from "./routes/jobs";
 import { register } from "./metrics";
 import { config } from "./config";
 import { v4 as uuidv4 } from "uuid";
+import { dlqRoutes } from "./routes/dlq";
+import { statsRoutes } from "./routes/stats";
 
 const app = Fastify({ logger: true });
 
@@ -27,6 +29,8 @@ app.get("/metrics", async (req, reply) => {
 });
 
 app.register(jobRoutes);
+app.register(dlqRoutes);
+app.register(statsRoutes);
 
 app.listen({ port: config.port }, (err) => {
   if (err) {

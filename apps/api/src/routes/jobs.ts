@@ -1,18 +1,5 @@
 import { FastifyInstance } from "fastify";
-import {
-  emailQueue,
-  reportQueue,
-  webhookQueue,
-  enqueue,
-} from "../queues/client";
-import { PRIORITIES } from "@repo/shared";
-import crypto from "crypto";
-
-export const queueMap = {
-  email: emailQueue,
-  report: reportQueue,
-  webhook: webhookQueue,
-};
+import { enqueueJob, getJobById } from "../services/jobService";
 
 export async function jobRoutes(app: FastifyInstance) {
   app.post(
@@ -35,20 +22,16 @@ export async function jobRoutes(app: FastifyInstance) {
       },
     },
     async (req, reply) => {
-      const { type, priority = "normal", payload } = req.body as any;
-      const queue = queueMap[type as keyof typeof queueMap];
-      const jobId = `${type}-${crypto.randomUUID()}`;
-      const priorityNum =
-        PRIORITIES[priority.toUpperCase() as keyof typeof PRIORITIES];
-
-      const job = await enqueue(queue, jobId, payload, priorityNum);
-
-      return reply.status(202).send({
-        jobId: job.id,
-        status: "queued",
-        queue: type,
-        priority,
-      });
+      const result = await enqueueJob(req.body as any);
+      return reply.status(202).send(result);
+      //     ↑ route only knows about HTTP status codes
     },
   );
+
+  app.get("/jobs/:jobId", async (req, reply) => {
+    const { jobId } = req.params as { jobId: string };
+    const job = await getJobById(jobId);
+    if (!job) return reply.status(404).send({ error: "Job not found" });
+    return job;
+  });
 }
